@@ -1,2 +1,3 @@
 # inkysun
-Blog Project
+
+personal blog project
