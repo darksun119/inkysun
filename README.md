@@ -1,3 +1,0 @@
-# inkysun
-
-personal blog project
