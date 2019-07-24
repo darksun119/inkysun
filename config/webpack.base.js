@@ -1,37 +1,24 @@
-
 const path =require('path');
-const production=require('./prod');
-const developement=require('./dev');
+const config = require('./config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+const OptimizeCssPlugin = require('optimize-css-assets-webpack-plugin');
 module.exports={
-    entry:path.resolve(__dirname,'src/index.js'),
+    entry:config.base.entry,
     output:{
-        path:path.resolve(__dirname,'dist'),
-        publicPath:'/dist/',
-        filename:'[name].[hash].js',
+        path:config.base.output.path,
+        filename:"js/"+config.base.output.filename,
+        chunkFilename:"[name]-[hash].js"
     },
-
     module:{
         rules:[
             {
-                test: /\.js$/,
+                test: /\.jsx?$/,
                 exclude: /(node_modules)/,  //对这个不做处理
                 use: {
                   loader: 'babel-loader',
-                  options: {
-                    presets: ['env']
-                  }
-                }
-            },
-            {
-                test: /\.jsx$/,
-                exclude: /(node_modules)/,  //对这个不做处理
-                use: {
-                  loader: 'babel-loader',
-                  options: {
-                    presets: ['env','react']    //在react环境下,也可以进行打包
-                  }
+                  options: config.babelConfig
                 }
             },
             {
@@ -73,10 +60,11 @@ module.exports={
 
         ]
     },
-    devSever:{
-        inline:true,
-        hot:true,
-        port:3000
+    resolve:{
+        extensions:["js","jsx"],
+        alias:{
+            "@":"../src/components"
+        }
     },
     plugins:[
         new HtmlWebpackPlugin({
@@ -86,7 +74,19 @@ module.exports={
                 minifyCSS: true,// 压缩内联css
                 hash:true
             },
-            template: '../public/index.html'
+            template: path.resolve(__dirname,'../index.html')
+        }),
+        new CopyWebpackPlugin([
+            {
+                from:path.resolve(__dirname,"../static"),
+                to:config.base.output.path+'/static',
+                ignore:['.*']
+            }
+        ]),
+        new OptimizeCssPlugin({
+            filename:'css/[name.[contenthash].css',
+            allChunks:true
         })
     ]
+
 }
