@@ -10,7 +10,6 @@ import {
     Switch,
     Link
 } from 'react-router-dom';
-import {url_add} from '@config';
 //本项目的模板页面
 
 
@@ -61,7 +60,7 @@ export default class Index extends Component {
                             </div>
                             <p><b>出错啦！</b></p>
                             <p>您无权限访问此页面或访问的页面不存在</p>
-                            <div className="bt"><Link to={url_add}>返回首页</Link></div>
+                            <div className="bt"><Link to={'/'}>返回首页</Link></div>
                         </div>
                     </div>
                 </div>

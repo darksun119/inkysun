@@ -10,13 +10,12 @@ import test from '@mobx/tests';
 const stores = {
     userStore, test
 };
-
 configure({'enforceActions': 'always'});
 
 ReactDOM.render(
     <LocaleProvider locale={zhCN}>
         <Provider {...stores}>
-            <router></router>
+            <router>test</router>
         </Provider>
     </LocaleProvider>,
     document.getElementById('root')

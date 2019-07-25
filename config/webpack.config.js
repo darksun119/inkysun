@@ -1,18 +1,18 @@
-import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin'; //html
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'; //css压缩
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin'; //多线程压缩
-import ExtendedDefinePlugin from 'extended-define-webpack-plugin'; //全局变量
-import CopyWebpackPlugin from 'copy-webpack-plugin'; //复制静态html
-import webpack from 'webpack';
-import HappyPack from 'happypack'; //多线程运行
-import CleanWebpackPlugin from 'clean-webpack-plugin'; //清空
-// import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'; //视图分析webpack情况
-const theme = require('./package.json').theme;
+const path =require('path');
+const HtmlWebpackPlugin =require('html-webpack-plugin'); //html
+const MiniCssExtractPlugin =require('mini-css-extract-plugin'); //css压缩
+const UglifyJsPlugin =require('uglifyjs-webpack-plugin'); //多线程压缩
+const ExtendedDefinePlugin =require('extended-define-webpack-plugin'); //全局变量
+const CopyWebpackPlugin =require('copy-webpack-plugin'); //复制静态html
+const webpack =require('webpack');
+const HappyPack =require('happypack'); //多线程运行
+const CleanWebpackPlugin =require('clean-webpack-plugin'); //清空
+// const BundleAnalyzerPlugin =require('webpack-bundle-analyzer').BundleAnalyzerPlugin; //视图分析webpack情况
+const theme = require('../package.json').theme;
 let happyThreadPool = HappyPack.ThreadPool({size:2});
 const userDefind={
     host:'localhost',
-    port:3000,
+    port:8000,
     title:'home'
 };
 
@@ -42,7 +42,7 @@ const pluginsPublic = [
         CONFIG_NODE_ENV: process.env.NODE_ENV
     }),
     new HtmlWebpackPlugin({
-        template: path.join(__dirname, 'src/index.html'), // Load a custom template
+        template: path.join(__dirname, '../src/index.html'), // Load a custom template
         inject: 'body', //注入到哪里
         filename: 'index.html', //输出后的名称
         hash: true, //为静态资源生成hash值
@@ -60,7 +60,28 @@ const pluginsPublic = [
         id: 'babel', //对于loaders id
         loaders: [
             { loader:'cache-loader'},
-            { loader:'babel-loader?cacheDirectory=true' }
+            { loader:'babel-loader',
+                options:{
+                    'presets': [
+                        'env',
+                        'react'
+                    ],
+                    'plugins': [
+                        'transform-runtime',
+                        'syntax-dynamic-import',
+                        'transform-decorators-legacy',
+                        'transform-class-properties',
+                        [
+                            'import',
+                            {
+                            'libraryName': 'antd',
+                            'libraryDirectory': 'es',
+                            'style': true
+                            }
+                        ]
+                    ]
+                }
+            }
         ], //是用babel-loader解析
         threadPool: happyThreadPool,
         verboseWhenProfiling: true //显示信息
@@ -79,8 +100,8 @@ const pluginsBuild = [
     }),
     new CopyWebpackPlugin([
         {
-            from: path.resolve(__dirname, 'static'),
-            to: path.resolve(__dirname, 'dist/static')
+            from: path.resolve(__dirname, '../static'),
+            to: path.resolve(__dirname, '../dist/static')
         }
     ]),
     new webpack.HashedModuleIdsPlugin()
@@ -91,7 +112,7 @@ let pro_plugins = [].concat(
     pluginsBuild,
     new webpack.DllReferencePlugin({
         context: __dirname,
-        manifest: require('./static/dll/manifest.json')
+        manifest: require('../static/dll/manifest.json')
     }),
     new UglifyJsPlugin({
         // sourceMap: true,
@@ -112,7 +133,7 @@ let pro_plugins = [].concat(
 )
 
 const plugins = pluginsPublic.concat(pluginsBuild,isProduction?pro_plugins:[]);
-export default {
+module.exports= {
     devServer: {
         // contentBase: path.join(__dirname, 'dist'), //开发服务运行时的文件根目录
         host: userDefind.host,
@@ -154,11 +175,11 @@ export default {
     },
     entry: {
         //入口
-        index: ['babel-polyfill', './src/index.js']
+        index: ['babel-polyfill', path.resolve(__dirname, '../src/index.js')]
     },
     output: {
         //出口
-        path: path.resolve(__dirname, 'dist'), //出口路径
+        path: path.resolve(__dirname, '../dist'), //出口路径
         filename: 'index.js',
         chunkFilename: '[chunkhash].js',  //按需加载名称
         publicPath: PUBLIC_PATH //公共路径
@@ -167,13 +188,12 @@ export default {
         mainFields: ['main', 'jsnext:main', 'browser'], //npm读取先后方式  jsnext:main 是采用es6模块写法
         alias: {
             //快捷入口
-            '@config': path.resolve(__dirname, 'config'),
-            '@components': path.resolve(__dirname, 'src/work/components'),
-            '@images': path.resolve(__dirname, 'src/work/images'),
-            '@style': path.resolve(__dirname, 'src/work/style'),
-            '@server': path.resolve(__dirname, 'src/work/server'),
-            '@common': path.resolve(__dirname, 'src/work/common'),
-            '@mobx': path.resolve(__dirname, 'src/work/mobx')
+            '@components': path.resolve(__dirname, '../src/work/components'),
+            '@images': path.resolve(__dirname, '../src/work/images'),
+            '@style': path.resolve(__dirname, '../src/work/style'),
+            '@server': path.resolve(__dirname, '../src/work/server'),
+            '@common': path.resolve(__dirname, '../src/work/common'),
+            '@mobx': path.resolve(__dirname, '../src/work/mobx')
 
         }
     },
@@ -203,7 +223,7 @@ export default {
                 include: [path.resolve(__dirname, 'src/work/images')],
                 use: [
                     {
-                        loader: 'url-loader?limit=8024', //limit 图片大小的衡量，进行base64处理
+                        loader: 'url-loader?limit=4096', //limit 图片大小的衡量，进行base64处理
                         options: {
                             name: '[path][name].[ext]'
                         }
@@ -215,7 +235,7 @@ export default {
                 use: [MiniCssExtractPlugin.loader, {
                     loader: 'css-loader?importLoaders=1',
                     options: {
-                        minimize: true //css压缩
+                        minimize: isProduction?true:false //css压缩
                     }
                 }, {
                     loader: 'less-loader', options: {

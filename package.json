@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --progress --profile",
+    "dev": "cross-env NODE_ENV=dev webpack-dev-server --progress --profile --config ./config/webpack.config.js",
     "start":"npm run dev",
     "build-production": "cross-env NODE_ENV=production webpack --progress --profile ",
     "build-developement": "cross-env NODE_ENV=developement webpack --progress --profile ",
