@@ -32,7 +32,6 @@ const PUBLIC_PATH = `http://${userDefind.host}:${userDefind.port}`;
 //   logLevel: 'info',
 // }),
 
-console.log(process.env.NODE_ENV)
 /**
  * 公共插件
  */
@@ -53,7 +52,7 @@ const pluginsPublic = [
     }),
     //new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
-        chunkFilename: '[chunkhash].css'
+        chunkFilename: '[hush].css'
     }),
     new HappyPack({
         //多线程运行 默认是电脑核数-1
@@ -62,6 +61,7 @@ const pluginsPublic = [
             { loader:'cache-loader'},
             { loader:'babel-loader',
                 options:{
+                    cacheDirectory:true,
                     'presets': [
                         'env',
                         'react'
@@ -89,22 +89,21 @@ const pluginsPublic = [
     new webpack.ContextReplacementPlugin(
         /moment[\\/]locale$/,
         /^\.\/(en|ko|ja|zh-cn)$/
-    )
+    ),
+    new webpack.HotModuleReplacementPlugin()
 ];
 /**
  * 公共打包插件
  */
 const pluginsBuild = [
-    new CleanWebpackPlugin({
-        root: __dirname
-    }),
+    new CleanWebpackPlugin(),
     new CopyWebpackPlugin([
         {
             from: path.resolve(__dirname, '../static'),
             to: path.resolve(__dirname, '../dist/static')
         }
     ]),
-    new webpack.HashedModuleIdsPlugin()
+    // new webpack.HashedModuleIdsPlugin()
 ];
 
 let pro_plugins = [].concat(
@@ -135,33 +134,21 @@ let pro_plugins = [].concat(
 const plugins = pluginsPublic.concat(pluginsBuild,isProduction?pro_plugins:[]);
 module.exports= {
     devServer: {
-        // contentBase: path.join(__dirname, 'dist'), //开发服务运行时的文件根目录
+        contentBase: path.join(__dirname, '../dist'), //开发服务运行时的文件根目录
         host: userDefind.host,
         compress: true, //开发服务器是否启动gzip等压缩
         port: userDefind.port, //端口
         historyApiFallback: true, //不会出现404页面，避免找不到
+        inline:true,
+        hot:true,
         proxy: {
             '/list': {
                 target: 'https://www.apiopen.top/meituApi',
                 pathRewrite: {'^/list': ''},
                 changeOrigin: true,
                 secure: false
-            },
-            '/api': {
-                target: 'http://localhost:3000/graphql',
-                pathRewrite: {'^/api': ''},
-                changeOrigin: true,
-                secure: false
-            },
-            '/ap_com': {
-                target: 'http://localhost:3000',
-                pathRewrite: {'^/ap_com': ''},
-                changeOrigin: true,
-                secure: false
             }
-        },
-        inline:true,
-        hot:true
+        }
     },
     devtool: false, //cheap-eval-source-map  是一种比较快捷的map,没有映射列
     performance: {
@@ -175,33 +162,32 @@ module.exports= {
     },
     entry: {
         //入口
-        index: ['babel-polyfill', path.resolve(__dirname, '../src/index.js')]
+        index: ['babel-polyfill',path.resolve(__dirname, '../src/main.js')]
     },
     output: {
         //出口
         path: path.resolve(__dirname, '../dist'), //出口路径
-        filename: 'index.js',
-        chunkFilename: '[chunkhash].js',  //按需加载名称
-        publicPath: PUBLIC_PATH //公共路径
+        filename: 'static/js/index.js',
+        chunkFilename: '[name].[hash].js',  //按需加载名称,此处加上hash会导致局部更新报错；
+        publicPath: '/' //公共路径
     },
     resolve: {
         mainFields: ['main', 'jsnext:main', 'browser'], //npm读取先后方式  jsnext:main 是采用es6模块写法
+        extensions: [".js",".jsx",".json"],
         alias: {
             //快捷入口
-            '@components': path.resolve(__dirname, '../src/work/components'),
-            '@images': path.resolve(__dirname, '../src/work/images'),
-            '@style': path.resolve(__dirname, '../src/work/style'),
-            '@server': path.resolve(__dirname, '../src/work/server'),
-            '@common': path.resolve(__dirname, '../src/work/common'),
-            '@mobx': path.resolve(__dirname, '../src/work/mobx')
-
+            '@components': path.resolve(__dirname, '../src/components'),
+            '@images': path.resolve(__dirname, '../src/images'),
+            '@style': path.resolve(__dirname, '../src/style'),
+            '@server': path.resolve(__dirname, '../src/server'),
+            '@common': path.resolve(__dirname, '../src/common'),
         }
     },
     module: {
         noParse: /node_modules\/(moment|chart\.js)/, //不解析
         rules: [
             {
-                test: /\.js$/,
+                test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/, //排除
                 loader: 'happypack/loader?id=babel'
             },
