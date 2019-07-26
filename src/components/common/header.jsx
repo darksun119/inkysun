@@ -1,14 +1,14 @@
 import React,{ Component } from 'react';
-// const logo =require('../../images/tfans.jpg');
+import logo from '@images/tfans.jpg';
 import {Layout,Col,Row} from 'antd'
 export default class MainHeader extends Component{
     constructor(){
         super();
         this.state={
-            log:{
+            logo:{
                 url:'/index',
                 text:'Logo',
-                // img:logo
+                src:logo
             },
             navlist:[
                 {
@@ -38,7 +38,11 @@ export default class MainHeader extends Component{
         return (
             <Layout.Header className='mainheader'>
                 <Row>
-                    <Col sm={20} md={4} ></Col>
+                    <Col sm={20} md={4} >
+                        <a href={this.state.logo.url}>
+                            <img src={this.state.logo.src} alt={this.state.logo.text} className="logo"/>
+                        </a>
+                    </Col>
                     <Col sm={0} md={20}>
                         {this.state.navlist.map((item,i) =>( <h2 key={i}>
                             <a href={item.url} >{item.text}</a>

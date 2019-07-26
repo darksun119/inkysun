@@ -240,15 +240,23 @@ module.exports= {
             {
                 test: /\.(png|jpg|gif|jpeg|ttf|svg)$/,
                 exclude: /(node_modules|bower_components)/,
-                include: [path.resolve(__dirname, 'src/work/images')],
                 use: [
                     {
-                        loader: 'url-loader?limit=4096', //limit 图片大小的衡量，进行base64处理
+                        loader: 'url-loader', //limit 图片大小的衡量，进行base64处理
                         options: {
+                            limit:8192,
                             name: '[path][name].[ext]'
                         }
                     }
                 ]
+            },
+            {
+                test: /\.(woff|eot|ttf|svg|gif)$/,
+                loader: 'url-loader',
+                options: {
+                  limit: 8192,
+                  name: 'font/[name].[hash:4].[ext]'
+                }
             }
         ]
     },
