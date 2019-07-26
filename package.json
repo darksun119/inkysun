@@ -6,14 +6,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev webpack-dev-server --progress --profile --config ./config/webpack.config.js",
-    "start": "node ./config/server.js",
+    "start": "npm run dev",
     "build-production": "cross-env NODE_ENV=production webpack --progress --profile --config ./config/webpack.config.js",
     "build-developement": "cross-env NODE_ENV=developement webpack --progress --profile --config ./config/webpack.config.js",
     "dll": "webpack --progress --config ./config/webpack.dll.config.js ",
     "lint": "eslint --ext .js, src",
     "extraltools": "npm i -g -p node-gyp windows-build-tools"
   },
-  "author": "weber",
+  "author": "inkysun",
   "license": "ISC",
   "dependencies": {
     "antd": "^3.15.1",
@@ -47,6 +47,7 @@
     "cache-loader": "^2.0.1",
     "clean-webpack-plugin": "^2.0.1",
     "copy-webpack-plugin": "^5.0.1",
+    "css-hot-loader": "^1.4.4",
     "css-loader": "0.28.11",
     "eslint": "^5.16.0",
     "eslint-plugin-react": "^7.13.0",

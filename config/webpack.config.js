@@ -52,10 +52,9 @@ const pluginsPublic = [
     }),
     //new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
-        chunkFilename: '[hush].css'
+        chunkFilename: '[name].css'
     }),
     new HappyPack({
-        //多线程运行 默认是电脑核数-1
         id: 'babel', //对于loaders id
         loaders: [
             { loader:'cache-loader'},
@@ -194,12 +193,47 @@ module.exports= {
             {
                 test: /\.css$/,
                 use: [
+                    {loader: 'css-hot-loader'},
                     {loader: MiniCssExtractPlugin.loader},
                     {
                         loader: 'css-loader',
                         options: {
                             minimize: isProduction?true:false //压缩
                         }
+                    }
+                ]
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    {loader: 'css-hot-loader'},
+                    {loader: MiniCssExtractPlugin.loader}, {
+                        loader: 'css-loader?importLoaders=1',
+                        options: {
+                            minimize: isProduction?true:false //css压缩
+                        }
+                    }, {
+                        loader: 'less-loader', options: {
+                            javascriptEnabled: true
+                        }
+                    }
+                ]
+            }, {
+                test: /\.scss$/,
+                use: [
+                    {loader: 'css-hot-loader'},
+                    {loader: MiniCssExtractPlugin.loader},
+
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            minimize: isProduction?true:false //压缩
+                            // sourceMap: minimize[dev],
+                        }
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {modifyVars: theme}
                     }
                 ]
             },
@@ -213,41 +247,6 @@ module.exports= {
                         options: {
                             name: '[path][name].[ext]'
                         }
-                    }
-                ]
-            },
-            {
-                test: /\.less$/,
-                use: [MiniCssExtractPlugin.loader, {
-                    loader: 'css-loader?importLoaders=1',
-                    options: {
-                        minimize: isProduction?true:false //css压缩
-                    }
-                }, {
-                    loader: 'less-loader', options: {
-                        javascriptEnabled: true
-                        // modifyVars: {
-                        //     'primary-color': '#1DA57A',
-                        //     'link-color': '#1DA57A',
-                        //     'border-radius-base': '2px',
-                        // }
-                    }
-                }]
-            }, {
-                test: /\.scss$/,
-                use: [
-                    {loader: MiniCssExtractPlugin.loader},
-
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            minimize: isProduction?true:false //压缩
-                            // sourceMap: minimize[dev],
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {modifyVars: theme}
                     }
                 ]
             }

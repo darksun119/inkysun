@@ -1,9 +1,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-// import zhCN from 'antd/lib/locale-provider/zh_CN';
-// import {LocaleProvider} from 'antd';
-import App from '@components/app.jsx'
+import Router from './router/index'
+import '@style/app.less';
 ReactDOM.render(
-    <App />,
+    <Router />,
     document.getElementById('root')
 );

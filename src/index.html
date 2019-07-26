@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="<%= htmlWebpackPlugin.options.url %>favicon.png" type="image/x-icon">
@@ -10,7 +10,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta http-equiv="x-dns-prefetch-control" content="on">
-    <style>
+    <style type="text/css">
+        body{
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
         .loader_warp{
             display: flex;
             height: 100%;
@@ -18,8 +23,6 @@
         .loader_warp >div{
             margin: auto;
         }
-    </style>
-    <style type="text/css">
         @-moz-keyframes loading {
             0%, 100% {
                 -moz-transform: scale(1) rotateZ(0deg);
