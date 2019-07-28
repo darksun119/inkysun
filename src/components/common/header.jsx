@@ -1,6 +1,16 @@
 import React,{ Component } from 'react';
 import logo from '@images/tfans.jpg';
-import {Layout,Col,Row} from 'antd'
+import { Link } from 'react-router-dom';
+import {Layout,Col,Row,Menu,Dropdown,Button,Icon } from 'antd';
+const DropdownList=navlist=>{
+     return(<Menu>
+                {navlist.map((item,i) =>( 
+                    <Menu.Item key={i}>
+                            <Link to={item.url}>{item.text}</Link>
+                    </Menu.Item>))
+                } 
+            </Menu>);
+}
 export default class MainHeader extends Component{
     constructor(){
         super();
@@ -8,28 +18,33 @@ export default class MainHeader extends Component{
             logo:{
                 url:'/index',
                 text:'Logo',
-                src:logo
+                src:''
             },
             navlist:[
                 {
                     text:'首页',
-                    url:'index'
+                    url:'index',
+                    icon:'home'
                 },
                 {
                     text:'详情',
-                    url:'details'
+                    url:'details',
+                    icon:'details'
                 },
                 {
                     text:'关于',
-                    url:'about'
+                    url:'about',
+                    icon:'about'
                 },
                 {
                     text:'用户',
-                    url:'user'
+                    url:'user',
+                    icon:'user'
                 },
                 {
                     text:'管理',
-                    url:'admin'
+                    url:'admin',
+                    icon:'admin'
                 },
             ]
         }
@@ -37,18 +52,28 @@ export default class MainHeader extends Component{
     render(){
         return (
             <Layout.Header className='mainheader'>
-                <Row>
+                <Row className="headerRow">
                     <Col sm={20} md={4} >
                         <a href={this.state.logo.url}>
                             <img src={this.state.logo.src} alt={this.state.logo.text} className="logo"/>
                         </a>
                     </Col>
                     <Col sm={0} md={20}>
-                        {this.state.navlist.map((item,i) =>( <h2 key={i}>
-                            <a href={item.url} >{item.text}</a>
-                        </h2>))}
+                        <Menu className="navList" theme="light" mode="horizontal">
+                            {this.state.navlist.map((item,i) =>(
+                            <Menu.Item key={i} className="navItem">
+                                <Link to={item.url} >
+                                    <Icon type={item.icon}></Icon>
+                                    {item.text}
+                                </Link>
+                            </Menu.Item>))}
+                        </Menu>
                     </Col>
-                    <Col sm={4} md={0}></Col>
+                    <Col sm={4} md={0} className="dropdownDiv">
+                        <Dropdown overlay={DropdownList(this.state.navlist)} placement="bottomCenter" trigger={["click","touchend"]} >
+                            <Button ><Icon type="menu"></Icon></Button>
+                        </Dropdown>
+                    </Col>
                 </Row>
             </Layout.Header>
         );
