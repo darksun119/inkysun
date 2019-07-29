@@ -1,3 +1,4 @@
+@navBG:#001529;
 html,body{
     height:100%;
 }
@@ -8,14 +9,17 @@ html,body{
 
 .mainheader{
     .headerRow{
+        background: @navBG;
         width: 100%;
+        height:64px;
     }
     .logo{
         height:62px;
     }
     .navList{
+        height: 100%;
         line-height: 63px;
-        background: black;
+        background: @navBG;
         a{
            color:white;
            &:hover{
@@ -37,7 +41,54 @@ html,body{
     padding: 0;
     background: rgba(0,0,0,.5)
 }
+ul,ol,dl{
+    list-style: none;
+}
 .pageContainer{
-    background: #ccc;
     height: 100%;
+    @media (min-width:768px){
+        .leftNav{
+            display: block;
+            width: 200px;
+            float: left;
+            .ant-menu-item{
+                border-right: 2px solid rgba(0,0,0,0);
+            }
+            .ant-menu-item-selected{
+                border-right: 2px solid #1890ff;
+            }
+        }
+        .articleList{
+            display: flex;
+            flex-wrap: wrap;
+            height: 100%;
+            li{
+                text-align: center;
+                width: 300px;
+                margin:10px auto;
+                padding: 0 10px;
+            }
+
+        }
+    }
+    @media all and (max-width:767px) {
+        .leftNav{
+            display: flex;
+            .ant-menu-item{
+                border-bottom: 2px solid rgba(0,0,0,0);
+            }
+            .ant-menu-item-selected{
+                border-bottom: 2px solid #1890ff;
+            }
+        }
+        .articleList{
+            display: block;
+            li{ 
+                text-align: center;
+                padding: 20px;
+                margin: 5px;
+            }
+        }
+        
+    }
 }
