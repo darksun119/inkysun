@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import {Layout,Col,Row,Menu,Dropdown,Button,Icon } from 'antd';
 const {Header} = Layout;
 const DropdownList=navlist=>{
-     return(<Menu>
+     return(<Menu className="topNav">
                 {navlist.map((item,i) =>( 
-                    <Menu.Item key={i}>
+                    <Menu.Item key={item.url}>
                             <Link to={item.url}>{item.text}</Link>
                     </Menu.Item>))
                 } 
@@ -16,6 +16,7 @@ export default class MainHeader extends Component{
     constructor(){
         super();
         this.state={
+            selectedKey:'',
             logo:{
                 url:'/index/all',
                 text:'Logo',
@@ -45,6 +46,15 @@ export default class MainHeader extends Component{
             ]
         }
     };
+    static getDerivedStateFromProps(props, state){
+        console.log(props,state)
+        if(props.match){
+            this.setState({
+                selectedKey:this.props.match.path
+            })
+        }
+        return null;
+    }
     render(){
         return (
             <Header className='mainheader'>
@@ -55,9 +65,9 @@ export default class MainHeader extends Component{
                         </a>
                     </Col>
                     <Col xs={0} sm={0} md={20}>
-                        <Menu className="navList" theme="light" mode="horizontal">
+                        <Menu className="navList" theme="light" mode="horizontal" >
                             {this.state.navlist.map((item,i) =>(
-                            <Menu.Item key={i} className="navItem">
+                            <Menu.Item key={item.url} >
                                 <Link to={item.url} >
                                     <Icon type={item.icon}></Icon>
                                     {item.text}

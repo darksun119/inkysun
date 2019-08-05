@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import MainHeader from '@components/common/header';
-import MainFooter from '@components/common/footer';
 import {Link,Switch,Route}   from 'react-router-dom';
 import { Layout,Menu} from 'antd';
 const {Sider,Content} = Layout;
@@ -14,7 +12,6 @@ import Job from "@components/home/job";
 export default class Home extends Component {
     constructor(){
         super();
-        window.react=this;
         this.state={
             leftNav:[
                 {
@@ -42,20 +39,17 @@ export default class Home extends Component {
     }
     render(){
         return (
-            <Layout className="pageContainer">
-                <MainHeader />
-                <Layout className="MainContent">
+            <Layout className="MainContent">
                     <Content>
                         <Menu theme="light" className="leftNav">
                             { 
                                 this.state.leftNav.map((item,i)=>(
-                                    <Menu.Item key={i}>
+                                    <Menu.Item key={item.url}>
                                         <Link to={item.url}>{item.text}</Link>
                                     </Menu.Item>
                                 ))
                             }
-                            
-                        </Menu>
+                        </Menu> 
                         <Switch>
                             <Route path='/index/all'  exact component={ AllArticle } />   
                             <Route path='/index/good'  exact component={ Good } />   
@@ -65,8 +59,6 @@ export default class Home extends Component {
                         </Switch>
                     </Content>
                 </Layout>
-                <MainFooter />
-            </Layout>
         );
     }
 }
