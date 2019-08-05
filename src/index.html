@@ -133,7 +133,6 @@
         }
     </style>
 </head>
-<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
 <body>
 <div id="root">
     <div class="loader_warp">
@@ -149,7 +148,8 @@
     </div>
 </div>
 <% if (htmlWebpackPlugin.options.pro) { %>
-    <script src='<%= htmlWebpackPlugin.options.url %>Dll.js'></script>
+    <script src='<%= htmlWebpackPlugin.options.url %>/static/dll/common.js'></script>
+    <script src='<%= htmlWebpackPlugin.options.url %>/static/dll/antd.js'></script>
 <% } %>
 </body>
 </html>

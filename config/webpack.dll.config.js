@@ -6,17 +6,17 @@ const common = [
   'react-router',
   'react-router-dom',
   'axios',
-  'moment',
-  'antd'
+  'moment'
 ];
 module.exports = {
   mode:'production',
   entry: {
-    common
+    common,
+    antd:['antd']
   },
   output: {
     path: path.resolve(__dirname, '../static/dll'),
-    filename: '[name].[hash].js',
+    filename: '[name].js',
     library: '[name]_[hash]',
   },
   plugins: [

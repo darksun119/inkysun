@@ -48,11 +48,12 @@ const pluginsPublic = [
         title: userDefind.title,
         dev_port: userDefind.port,
         url: PUBLIC_PATH,
-        pro: process.env.NODE_ENV
+        pro: true,
+        chunks: ['index']
     }),
     //new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
-        chunkFilename: '[name].css'
+        chunkFilename: '../static/css/[name].css'
     }),
     new HappyPack({
         id: 'babel', //对于loaders id
@@ -109,7 +110,6 @@ let pro_plugins = [].concat(
     pluginsPublic,
     pluginsBuild,
     new webpack.DllReferencePlugin({
-        context: __dirname,
         manifest: require('../static/dll/manifest.json')
     }),
     new UglifyJsPlugin({
@@ -176,7 +176,7 @@ module.exports= {
         alias: {
             //快捷入口
             '@components': path.resolve(__dirname, '../src/components'),
-            '@images': path.resolve(__dirname, '../src/images'),
+            '@images': path.resolve(__dirname, '../static/images'),
             '@style': path.resolve(__dirname, '../src/style'),
             '@server': path.resolve(__dirname, '../src/server'),
             '@common': path.resolve(__dirname, '../src/common'),
