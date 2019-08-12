@@ -6,7 +6,7 @@ const {Header} = Layout;
 const DropdownList=navlist=>{
      return(<Menu className="topNav">
                 {navlist.map((item,i) =>( 
-                    <Menu.Item key={item.url}>
+                    <Menu.Item key={i}>
                             <Link to={item.url}>{item.text}</Link>
                     </Menu.Item>))
                 } 
